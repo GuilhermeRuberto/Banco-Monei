@@ -5,6 +5,8 @@ const teclado = require('prompt-sync')({sigint:true});
 const contas = [];
 var verificacao = 0;
 var apt=0;
+var aptV = false;
+var acesso=0;
 
 
 
@@ -46,6 +48,7 @@ class CB{
 
 
 //------------------------------Começo das funcoes 
+//Função para criação da classe do cliente
 function newCB(tit,cpf){
 
     i=0
@@ -58,6 +61,7 @@ function newCB(tit,cpf){
 
 }
 
+//Função para listagem de todas as contas
 function listCB(){
 
     for(i=0;i<contas.length;i++){
@@ -66,27 +70,26 @@ function listCB(){
 
 }
 
+//Função para busca de contas que retorna conta encontrada e o indice para o acesso
 function buscaCB(busca){
 
-
-    
-    
     for(i=0;i<contas.length;i++){
 
         if(contas[i].cpf==busca){
+            
+            apt = i
+            return aptV = true
 
-
-            console.log("Achamos sua conta")
-
-           return apt = i
         }
         
     }
 
     console.log("Verifique se você digitou o CPF certo ou conta INEXISTENTE")
     apt = 0
+    aptV = false
 }
 
+//Função acesso para poder acessar e executar acoes na conta
 function acessoCB(apt){
 
     let ver = 0
@@ -132,9 +135,8 @@ function acessoCB(apt){
                 break;
     
             case 3:
+                transferir()
                 
-
-
                 break;
     
             
@@ -146,6 +148,58 @@ function acessoCB(apt){
     }while(ver!==0);
 
 }
+
+function transferir(){
+
+    let valT = 2
+
+    do{
+        console.log("Vamos fazer uma transferencia!")
+        console.log("Para qual conta você deseja fazer uma transferencia?")
+        console.log("Digite o CPF o qual vai ser transferido o dinheiro: ")
+        console.log("exemplo( 0000000000 ):")
+
+        let cpfT = parseInt(teclado())
+        
+        buscaCB(cpfT)
+        if(aptV==false){
+            break
+        }
+        console.log('Foi encontrada a conta no nome de ' + contas[apt].tit + ' CPF ' + contas[apt].cpf +' !')
+        console.log("Essa conta pertence a pessoa desejada para realizar a transferencia? ")
+        console.log("Para confirmar aperte (1)")
+        console.log("Para corrigir  aperte (2)")
+        console.log("Para sair  aperte (0)")
+
+        valT = parseInt(teclado())
+        if(valT==1){
+
+            console.log("Digite o valor desejado para enviar a conta :")
+            let transf = parseFloat(teclado())
+
+            if(transf>contas[acesso].saldo){
+
+            console.log("Você não tem dinheiro o suficiente para realizar a transferecia!")
+            break
+
+            } else{
+                
+                contas[apt].depositar(transf)
+                contas[acesso].sacar(transf)
+                console.log(contas[apt])
+                console.log(contas[acesso])
+            }
+
+        }
+        else if(valT==0){
+            break
+        }
+
+
+    }while(valT==2)
+
+}
+
 
 function geradorNumCB() {
     return parseInt(Math.random() * (99999 - 00000));
@@ -160,10 +214,11 @@ console.log("██████╔╝██║  ██║██║ ╚███�
 console.log("╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝     ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝")
 console.log("-------------------------Olá seje(a) bem vindo ao Banco Monei---------------------------")
 
+
 //Criacao de algumas contas apenas para teste 
 newCB("juca",12345)
 newCB("marcio",11412415)
-newCB("julio",17567568)
+newCB("julio",123)
 newCB("manoella",54321)
 newCB("marcos",5464564857)
 newCB("juca",15465428)
@@ -195,9 +250,10 @@ do{
             let cpfJ = parseInt(teclado())
 
             buscaCB(cpfJ)
-            acessoCB(apt)
-
-
+            if(aptV==true){
+                acesso = apt
+                acessoCB(apt)
+            }
             break;
 
         case 2:
@@ -217,7 +273,31 @@ do{
             break;
 
         case 3:
-            
+
+            console.log("Vamos excluir as contas")
+            console.log("Digite o CPF da conta a ser excluida")
+            let cpfX = 0
+            let numCBX = 0
+            let titX = ""
+            cpfX = parseInt(teclado())
+            buscaCB(cpfX)
+            if(aptV==false){
+                break
+            }
+            console.log("Digite o numero da conta a ser excluida")
+            numCBX = parseInt(teclado())
+
+            console.log("Digite o nome do TITULAR da conta a ser excluida")
+            titX = teclado()
+
+            if(contas[apt].tit==titX && contas[apt].numC==numCBX){
+                
+                contas.splice(apt,1)
+
+            }
+            else(console.log("Algo foi digitado incorretamente!"))
+
+
             break;
 
         case 4:
