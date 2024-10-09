@@ -5,6 +5,7 @@ var apt = 0;
 var aptV = false;
 var acesso = 0;
 
+
 //------------------------------classe conta bancaria
 class CB {
   constructor(tit, cpf, saldo, numC) {
@@ -41,7 +42,8 @@ function buscaCB(busca) {
   for (i = 0; i < contas.length; i++) {
     if (contas[i].cpf == busca) {
       apt = i;
-      return (aptV = true);
+      aptV = true
+      return;
     }
   }
 
@@ -64,26 +66,30 @@ function geradorNumCB() {
   return parseInt(Math.random() * (99999 - 00000));
 }
 
-
-
-//Criacao de algumas contas apenas para teste
-
-document.getElementById("sign").addEventListener("click", function () {
-    
+// Criar contas bancárias quando a página é carregada
+window.onload = function() {
   newCB("juca", 12345);
   newCB("marcio", 11412415);
   newCB("julio", 123);
   newCB("manoela", 54321);
   newCB("marcos", 5464564857);
   newCB("juca", 15465428);
+};
+
+
+
+
+document.getElementById("sign").addEventListener("click", function () {
 
   let campo = document.getElementById("cpf");
   let valor = campo.value;
 
   buscaCB(valor);
   
-  if (aptV == true) {
+  if (aptV) {
     acesso = apt;
     acessoCB(apt);
+    
+    alert("TESTE")
   }
 });
