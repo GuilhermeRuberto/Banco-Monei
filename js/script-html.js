@@ -54,8 +54,9 @@ function buscaCB(busca) {
 
 //Função acesso para poder acessar e executar acoes na conta
 function acessoCB(apt) {
-  
+
   window.location.href = "acesso.html";
+  
 }
 
 function transferir() {
@@ -93,3 +94,5 @@ document.getElementById("sign").addEventListener("click", function () {
     alert("TESTE")
   }
 });
+
+
